@@ -1,6 +1,6 @@
 import { createContext } from "react";
 
-
+// //// TYPES!!
 const AppContext = createContext();
 
 // function Context({ children }) {

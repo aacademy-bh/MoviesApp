@@ -44,10 +44,12 @@ function index() {
     }
   }, [inView]);
 
+  // //// No need to use a function here, call setSearch directly.
   const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
   };
 
+  // //// No need to use a function here, call setGenre directly.
   const handleGenre = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setGenre(e.target.value);
   };
@@ -78,6 +80,7 @@ function index() {
           </div>
         </div>
         <div className="grid grid-cols-4 gap-4 max-w-fit">
+          {/* //// There is a cleaner way to do this using a reducer */}
           {data?.pages?.map((page) => (
             <React.Fragment key={page.page}>
               {page?.results?.map((movie: Movie) => (
@@ -92,6 +95,7 @@ function index() {
               onClick={() => fetchNextPage()}
               disabled={!hasNextPage || isFetchingNextPage}
             >
+              {/* A cleaner way would be to say isFetchingNextPage || hasNextPage ? ... : ... */}
               {isFetchingNextPage ? (
                 <Spinner />
               ) : hasNextPage ? (
@@ -101,6 +105,7 @@ function index() {
               )}
             </button>
           </div>
+          {/* //// {isFetching && !isFetchingNextPage ? <div><Spinner /></div> : null} */}
           <div>{isFetching && !isFetchingNextPage ? <Spinner /> : null}</div>
         </div>
       </div>

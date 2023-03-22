@@ -17,6 +17,7 @@ function Navbar() {
     useComponentVisible(false);
   const [showModal, setShowModal] = useState(false);
   const { isLoggedIn, logout, token } = useAuth();
+  // //// TYPES!!
   const clickHandler = (e: any) => {
     if (e.target.id === "signin") {
       setStatus((status) => true);
@@ -68,6 +69,7 @@ function Navbar() {
               <button
                 id="wishlist"
                 onClick={(e) => {
+                  // //// Why do you need to prevent default and stop propagation?
                   e.preventDefault();
                   e.stopPropagation();
                   setIsComponentVisible(true);
@@ -86,7 +88,9 @@ function Navbar() {
                     <img
                       src={userDetails?.data?.userr.badges[0]}
                       className="w-6 h-6 mr-1"
-                    />{" "}
+                    />
+                    {/* //// Use gap on the parent element instead of {" "} */}
+                    {" "}
                     {userDetails?.data?.userr.userName}
                   </div>
                 </Menu.Button>

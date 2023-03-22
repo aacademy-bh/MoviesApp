@@ -57,6 +57,7 @@ function Wishlist() {
       key={movie.id}
       className="flex p-4 items-center justify-between"
       onClick={(e) => {
+        // /// Why do you need to prevent default and stop propagation?
         e.preventDefault();
         e.stopPropagation();
         router.push(`/movie/${movie.id}`);
@@ -78,6 +79,7 @@ function Wishlist() {
         <i
           className="fa-solid fa-heart cursor-pointer hover:text-red-900"
           onClick={(e) => {
+            // /// Why do you need to prevent default and stop propagation?
             e.preventDefault();
             e.stopPropagation();
             removeHandler(movie.id);
@@ -86,6 +88,7 @@ function Wishlist() {
         <i
           className="fa-solid fa-cart-plus cursor-pointer"
           onClick={(e) => {
+            // /// Why do you need to prevent default and stop propagation?
             e.preventDefault();
             e.stopPropagation();
             handleAddToCartClick(movie.id);
@@ -94,6 +97,15 @@ function Wishlist() {
       </div>
     </li>
   ));
+  
+  /* //// Instead of doing it this way, you can have 2 return statements:
+   
+      if(userDetailsLoading) return null;
+
+      return (...)
+
+      //// This is a bit cleaner and easier to read.
+  */
   return (
     <div className="z-50 w-110 absolute top-12 right-20 mt-1 font-normal bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600 overflow-auto max-h-128">
       {!userDetailsLoading ? (

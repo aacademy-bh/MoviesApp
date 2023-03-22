@@ -9,6 +9,7 @@ import dayjs from "dayjs";
 import Spinner from "@/components/spinner";
 import { useAuth } from "@/context/auth";
 
+// //// The function name collides with the imported type.
 function Movie({}) {
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -30,6 +31,7 @@ function Movie({}) {
     </span>
   ));
 
+  // //// I believe dayjs is a better choice to do this more cleanly.
   function toHoursAndMinutes(totalMinutes: number) {
     const hours = Math.floor(totalMinutes / 60);
     const minutes = totalMinutes % 60;
@@ -37,6 +39,7 @@ function Movie({}) {
     return `${padToTwoDigits(hours)}h ${padToTwoDigits(minutes)}m`;
   }
 
+  // //// TYPES!!
   function padToTwoDigits(num) {
     return num.toString().padStart(2);
   }
@@ -56,6 +59,7 @@ function Movie({}) {
       },
       onError: (err) => {
         console.log(err);
+        // //// TYPES!!
         toast.error(`${err?.response?.data?.message}`, {
           toastId: 1,
         });
@@ -97,8 +101,27 @@ function Movie({}) {
 
   if (!id) return "NOT FOUND - NO ID";
 
+
+  /* //// Instead of doing it this way, you can have 2 return statements:
+   
+      if(movieLoading) 
+        return (
+          <div className="w-full h-[calc(100vh-45px)]">
+            <Spinner />
+          </div>
+        )
+
+      return (...)
+
+      //// This is a bit cleaner and easier to read.
+  */
   return (
     <div>
+      {/* 
+          //// NO... JUST NO! Either use tailwind, or use inline JSX styles. IF YOU HAVE TO, use the file ../../styles/globals.css to define classes.
+          //// NEVER use this method. It's a hack, and it's not maintainable.
+          //// If you copy code from the internet, you should at least understand what it does so you rewrite it properly using tailwind.
+      */}
       <style>{`
       .image-overlay{
         position: relative;
@@ -120,7 +143,6 @@ function Movie({}) {
         backdrop-filter: blur(0px);
         -webkit-backdrop-filter: blur(0px);
       }
-    
       `}</style>
       <div className="pt-12">
         {!movieLoading ? (
@@ -139,6 +161,7 @@ function Movie({}) {
                   </div>
                 </div>
                 <p className="text-white p-1">
+                  {/* //// Use flex and gap-# instead of {" "} */}
                   {dayjs(movie?.data?.release_date).format("MMM DD, YYYY")} ●{" "}
                   <span className="ml-1">{genres}</span>
                 </p>
@@ -160,6 +183,7 @@ function Movie({}) {
                       <span className="text-4xl text-yellow float-right font-bold">
                         ${movie?.data?.price}
                       </span>
+                      {/* //// Should be one element with changing states instead of two, less code. */}
                       {movie?.data.inWishlist ? (
                         <button
                           className="btn rounded  bg-[rgba(255,255,255,.5)]"

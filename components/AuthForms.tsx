@@ -7,7 +7,10 @@ import { useAuth } from "@/context/auth";
 import { MutationErrorResponse } from "@/types";
 
 function AuthForms(props: { status: Boolean }) {
+  // //// What is status? What does it do? Why is it a Boolean?
   const { status } = props;
+
+  // Using a library like Formik would make this much cleaner.
   const [emailAddress, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [firstName, setFirstName] = useState("");
@@ -28,6 +31,7 @@ function AuthForms(props: { status: Boolean }) {
     handleAuth();
   };
 
+  // //// data is passed incorrectly to the endpoint
   const { mutate: handleAuth, isLoading: handleLoginLoading } = useMutation({
     mutationFn: () => axios.post(`/api/auth/${endPoint}`, formData),
     onSuccess: (res) => {
@@ -36,7 +40,9 @@ function AuthForms(props: { status: Boolean }) {
       queryClient.invalidateQueries(["userDetails"]);
     },
     onError: (err: MutationErrorResponse) => {
+      // //// console logs should be removed
       console.log(err);
+      // //// Why is it a template lateral?
       toast.error(`${err?.response?.data?.message}`);
     },
   });
@@ -54,6 +60,7 @@ function AuthForms(props: { status: Boolean }) {
             <h2 className="card-title text-red-700">
               {status ? "Sign In" : "Register"}{" "}
             </h2>
+            {/* //// these forms should have been separated */}
             {!status && (
               <>
                 <input

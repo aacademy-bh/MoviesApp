@@ -1,3 +1,5 @@
+// //// Filename: we already know it's a component, no need to add it to the name.
+
 import React, { useContext, useState } from "react";
 import Movie from "@/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -9,6 +11,7 @@ import { useAuth } from "@/context/auth";
 function MovieComponent(props) {
   const { movie, page } = props;
   const router = useRouter();
+  // //// A better name would be "isLiked" || "isInWishlist", like is a verb. 
   const [like, setLike] = useState(movie?.inWishlist);
   const { token } = useAuth();
   const queryClient = useQueryClient();
@@ -16,6 +19,7 @@ function MovieComponent(props) {
   // console.log("token", localStorage.getItem("token"));
   const { mutate: handleLikeClick, isLoading: handleAddWishlistLoading } =
     useMutation({
+      // //// TYPES!!
       mutationFn: (movieID: any) =>
         axios.post(
           "/api/wishlist/add",
@@ -50,6 +54,7 @@ function MovieComponent(props) {
 
   const { mutate: handleAddToCartClick, isLoading: handleAddToCartLoading } =
     useMutation({
+      // //// TYPES!!
       mutationFn: (movieID: any) => {
         return axios
           .post(
@@ -60,6 +65,7 @@ function MovieComponent(props) {
           .then((response) => toast.success(`${response?.data?.message}`));
       },
       onError: (err) => {
+        // //// Types!!
         console.log(err);
         toast.error(`${err?.response?.data?.message}`);
       },
@@ -90,6 +96,7 @@ function MovieComponent(props) {
      src={movie.poster_path ? movie.poster_path : 'https://www.altavod.com/assets/images/poster-placeholder.png'} alt=""/> */}
       <div className="absolute bottom-0 bg-white w-60 h-20 rounded-br-md rounded-bl-md p-4 flex justify-between">
         <span className="text-red-700 truncate w-40">
+          {/* //// No ternary is needed here, you could say movie.title || movie.name */}
           {movie.title ? movie.title : movie.name}
         </span>
         <span>
@@ -109,6 +116,7 @@ function MovieComponent(props) {
               <button
                 className=""
                 onClick={(e) => {
+                  // //// Why do you need to prevent default and stop propagation?
                   e.preventDefault();
                   e.stopPropagation();
                   removeHandler(movie.id);
@@ -120,6 +128,7 @@ function MovieComponent(props) {
               <button
                 className=""
                 onClick={(e) => {
+                  // //// Why do you need to prevent default and stop propagation?
                   e.preventDefault();
                   e.stopPropagation();
                   handleLikeClick(movie.id);
@@ -131,6 +140,7 @@ function MovieComponent(props) {
             <button
               className=""
               onClick={(e) => {
+                // //// Why do you need to prevent default and stop propagation?
                 e.preventDefault();
                 e.stopPropagation();
                 handleAddToCartClick(movie.id);

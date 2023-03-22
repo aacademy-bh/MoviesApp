@@ -1,3 +1,5 @@
+// //// Remove unused imports
+
 import React, { useContext, useEffect, useState } from "react";
 import AppContext from "@/context/context";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -6,12 +8,15 @@ import { toast } from "react-toastify";
 import { useRouter } from "next/router";
 import { useAuth } from "@/context/auth";
 
+// //// TYPES!!
 export default function Modal(props) {
   const router = useRouter();
   const [discount, setDiscount] = useState(false);
   const [coupon, setCoupon] = useState("");
   const { token } = useAuth();
   const queryClient = useQueryClient();
+
+  // //// Why is this a function? What is num? TYPES!!
   function getSum(total, num) {
     return total + num.price;
   }
@@ -30,6 +35,7 @@ export default function Modal(props) {
 
   const { mutate: handelRemoveFromCart, isLoading: removeHandlerLoading } =
     useMutation({
+      // //// TYPES!!
       mutationFn: (movieID: any) => {
         return axios
           .post(
@@ -40,13 +46,18 @@ export default function Modal(props) {
           .then((response) => console.log(response));
       },
       onError: (err) => {
+        // //// TYPES!!
         toast.error(err.data.message);
       },
       onSuccess: (res) => {
+        // //// Be more consistent with your usage. Either ([{ queryKey: ["cartDetails"] }]) or (["cartDetails"])
         queryClient.invalidateQueries({ queryKey: ["cartDetails"] });
+        //  //// TYPES!!
         toast.success(res.data.message);
       },
     });
+
+    // //// If you're not using the data or loading, don't destructure them.
   const {
     data: checkout,
     mutate: handelCheckout,
@@ -58,6 +69,7 @@ export default function Modal(props) {
         { confirm, cartPrice: finalPrice },
         { headers: { Authorization: token } }
       ),
+    // //// TYPES!!
     onError: (err) => toast.error(`${err?.data.message}`),
     onSuccess: (res, movieID) => {
       queryClient.invalidateQueries(["cartDetails"]);
@@ -76,10 +88,12 @@ export default function Modal(props) {
         { confirm, cartPrice: totalPrice, code: coupon },
         { headers: { Authorization: token } }
       ),
+    // //// TYPES!!
     onError: (err) => toast.error(`${err?.data.message}`),
     onSuccess: (res, movieID) => {
       console.log({ coupon });
       if (coupon) {
+        // //// Instead of using setDiscount as a boolean, use it as the discount amount. 
         setDiscount((discount) => !discount);
         finalPrice = res.data.total;
       }
@@ -88,12 +102,16 @@ export default function Modal(props) {
     },
   });
 
+  // //// TYPES!!
   const cartItems = userDetails?.data.cart?.map((item) => (
     <li
       key={item.id}
       className="border-t-1 border-b-1 list-none py-4 px-8 flex items-center"
       onClick={() => {
         router.push(`/movie/${item.id}`);
+
+        // //// Always destructuring props at the top of the function.
+        // //// const { setShowModal } = props;
         props.setShowModal(false);
       }}
     >
@@ -121,6 +139,8 @@ export default function Modal(props) {
       </div>
       <span className="flex flex-col text-2xl font-bold grow items-end">
         ${item.price || 5}
+
+        {/* //// This should be a button wrapping the icon element */}
         <i
           className="fa-solid fa-trash text-red-500 text-xl pl-0"
           onClick={(e) => {
@@ -132,7 +152,15 @@ export default function Modal(props) {
       </span>
     </li>
   ));
+  
+  /* //// Instead of doing it this way, you can have 2 return statements:
+   
+      if(!props.showModal) return null;
 
+      return (...)
+
+      //// This is a bit cleaner and easier to read.
+  */
   return (
     <>
       {props.showModal ? (
@@ -157,6 +185,7 @@ export default function Modal(props) {
                 </div>
                 {/*body*/}
                 <div className="relative p-0 flex-auto overflow-auto max-h-[50vh] min-h-[50vh] max-w-4xl min-w-[60%]">
+                  {/* //// You can just say cartItems?.length || <div>...</div> */}
                   {cartItems?.length > 0 ? (
                     cartItems
                   ) : (
@@ -164,6 +193,7 @@ export default function Modal(props) {
                   )}
                 </div>
                 {/*footer*/}
+                {/* //// a cleaner way would be to say !!cartItems?.length && ...  */}
                 {cartItems?.length > 0 && (
                   <div className="flex flex-col items-end justify-center p-6 border-solid rounded-b">
                     <div className="flex items-center self-center">
@@ -188,6 +218,7 @@ export default function Modal(props) {
                       <div className="flex flex-col w-full pt-2">
                         <div className="flex justify-between">
                           <span className="float-right p-1 font-bold tracking-wide text-sm">
+                            {/* //// Instead of having {" "} as a spacer, you could use gap-# on the parent element */}
                             Cart total{" "}
                           </span>
                           <span className="line-through font-bold tracking-wide text-md">
@@ -205,6 +236,7 @@ export default function Modal(props) {
                         </div>
                         <div className="flex justify-between">
                           <span className="float-right p-1 font-bold tracking-wide text-sm">
+                            {/* //// Instead of having {" "} as a spacer, you could use gap-# on the parent element */}
                             Total amount{" "}
                           </span>
                           <span className="font-bold tracking-wide text-md">
@@ -214,6 +246,7 @@ export default function Modal(props) {
                       </div>
                     ) : (
                       <span className="float-right p-2 font-bold tracking-wide text-md">
+                        {/* //// Instead of having {" "} as a spacer, you could use gap-# on the parent element */}
                         Cart total :{" "}
                         <span className="font-bold tracking-wide text-md">
                           ${totalPrice}

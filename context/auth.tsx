@@ -1,6 +1,8 @@
 import router from "next/router";
 import { createContext, useContext, useEffect, useState } from "react";
 
+// //// I don't need to thank myself. But, thanks me.
+
 const AuthContext = createContext({} as AuthContextType);
 
 export const useAuth = () => useContext(AuthContext);

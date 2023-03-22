@@ -1,3 +1,6 @@
+// //// Why is this page href /Purchases instead of /purchases?
+// //// It is always preferred to use index.tsx inside a folder called purchases instead of a file directly called purchases.tsx
+
 import MovieComponent from "@/components/MovieComponent";
 import Spinner from "@/components/spinner";
 import { useAuth } from "@/context/auth";
